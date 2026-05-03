@@ -467,10 +467,10 @@ class AZPolicyMap(nn.Module):
 
         # Translate HWC index -> CHW index for the non-channels-last path.
         C, H, W = 80, 8, 8
-        h = gather_idx_chw // (W * C)
-        w = (gather_idx_chw // C) % W
-        c = gather_idx_chw % C
-        gather_idx_hwc = c * H * W + h * W + w
+        c = gather_idx_chw // (H * W)
+        h = (gather_idx_chw // W) % H
+        w = gather_idx_chw % W
+        gather_idx_hwc = h * W * C + w * C + c
 
         self.register_buffer("gather_idx_nhwc", torch.from_numpy(gather_idx_hwc))
         self.register_buffer("gather_idx_nchw", torch.from_numpy(gather_idx_chw))
